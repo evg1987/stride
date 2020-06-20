@@ -69,16 +69,17 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game
             {
                 meshRenderFeature.RenderStageSelectors.Add(new SimpleGroupToRenderStageSelector
                 {
-                    EffectName = EditorGraphicsCompositorHelper.EditorForwardShadingEffect + ".Wireframe",
+                    //EffectName = EditorGraphicsCompositorHelper.EditorForwardShadingEffect + ".Wireframe",
                     RenderStage = wireframeRenderStage,
                     RenderGroup = RenderGroupMask.All
                 });
-                var wireframeRenderFeature = new WireframeRenderFeature();
+
+                var wireframeRenderFeature = new SelectionWireframeRenderFeature();
                 meshRenderFeature.RenderFeatures.Add(wireframeRenderFeature);
                 wireframeRenderFeature.RegisterSelectionService(selectionService);
 
                 // Enable editor shaders for meshes (will use StrideEditorForwardShadingEffect instead of StrideForwardShadingEffect)
-				// TODO: Avoid hardcoding those shader names (maybe by letting the user mix himself editor mixin in his own effect?)
+                // TODO: Avoid hardcoding those shader names (maybe by letting the user mix himself editor mixin in his own effect?)
                 meshRenderFeature.RenderStageSelectors.Add(new MeshEditorRenderStageSelector());
             }
 
@@ -130,6 +131,8 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game
                     if (renderObject.ActiveRenderStages[index].Active)
                     {
                         var effectName = renderObject.ActiveRenderStages[index].EffectSelector.EffectName;
+                        if (effectName == null) continue;
+
                         if (effectName == "StrideForwardShadingEffect"
                             || effectName.StartsWith("StrideForwardShadingEffect."))
                         {
